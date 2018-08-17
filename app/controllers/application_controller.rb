@@ -112,6 +112,27 @@ class ApplicationController < Sinatra::Base
   end
 end
 
+get '/album/:slug/edit' do
+  @album = Album.find_by_slug(params[:slug])
+  if logged_in? && @album.user.id == current_user.id
+    erb :'/albums/edit_album'
+  else
+    redirect to "/albums"
+  end
+end
+
+post '/album/:slug' do
+  #binding.pry
+  @album = Album.find_by_slug(params[:slug])
+  if logged_in? && @album.user.id == current_user.id
+    @album.update(name: params[:name]) unless params[:name].blank?
+    @album.update(year_released: params[:year_released]) unless params[:year_released].blank?
+    redirect to "/albums"
+  else
+    redirect to "/albums"
+  end
+end
+
 delete '/album/:slug/delete' do
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
@@ -119,7 +140,7 @@ delete '/album/:slug/delete' do
     @album.songs.each do |song|
       song.delete
     end
-  
+
     @album.delete
     redirect to "/main"
   else

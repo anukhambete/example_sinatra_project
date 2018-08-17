@@ -1,0 +1,16 @@
+<h2><%= @album.name %></h2>
+<h2>Edit Album name and Year of release</h2>
+
+<form action="/album/<%=@album.slug%>" method="POST">
+  <label>Album Name:</label>
+  <br></br>
+  <input type="text" name="name" id="name" value="<%=@album.name%>">
+  <br></br>
+  <label>Year of Release:</label>
+  <br></br>
+  <input type="text" name="year_released" id="year_released" value="<%=@album.year_released%>">
+  <br></br>
+  <button type="submit" value="submit">submit</button>
+</form>
+
+<p>Add/Create <a href="/song/new">New Song</a></p>
