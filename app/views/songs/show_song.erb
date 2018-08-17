@@ -1,0 +1,15 @@
+<h2>Album Name:<%= @album.name %></h2>
+
+
+
+<form action="/album/<%=@album.slug%>/<%=@song.slug%>/delete" method="post">
+  <input id="hidden" type="hidden" name="_method" value="delete">
+
+  <h2>Song Name: <%= @song.name %></h2>
+  <h2>Track Length: <%= @song.track_length %></h2>
+
+  <h4><button type="submit" value="submit">Delete Song</button> </h4>
+</form>
+
+
+<p>Return to main <a href="/main">Main</a></p>

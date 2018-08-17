@@ -130,7 +130,7 @@ post '/song' do
           if !params[:albums].first.blank? && !params[:album][:name].blank?
             redirect "/song/new"
           elsif !params[:albums].first.blank?
-            @album = Album.find_by(params[:albums])
+            @album = Album.find_by_id(params[:albums])
             @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
             @song.save
             redirect "/albums"
@@ -151,16 +151,30 @@ post '/song' do
     else
       redirect "/song/new"
     end
-
   else
     redirect "/login"
   end
-  #binding.pry
 end
 
+########
 
+get '/album/:slug/:slug_s' do
+  #binding.pry
+  @album = Album.find_by_slug(params[:slug])
+  @song = Song.find_by_slug(params[:slug_s])
+  erb :'/songs/show_song'
+end
 
-
+delete '/album/:slug/:slug_s/delete' do
+  #binding.pry
+  @song = Song.find_by_slug(params[:slug_s])
+  if logged_in? && @song.album.user.id == current_user.id
+    @song.delete
+    redirect to "/main"
+  else
+    redirect to "/main"
+  end
+end
 
 
 
