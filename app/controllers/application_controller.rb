@@ -112,6 +112,21 @@ class ApplicationController < Sinatra::Base
   end
 end
 
+delete '/album/:slug/delete' do
+  #binding.pry
+  @album = Album.find_by_slug(params[:slug])
+  if logged_in? && @album.user.id == current_user.id
+    @album.songs.each do |song|
+      song.delete
+    end
+  
+    @album.delete
+    redirect to "/main"
+  else
+    redirect to "/main"
+  end
+end
+
 ################################ song controller
 
 get '/song/new' do

@@ -2,10 +2,17 @@
 
 <h3>List of Songs</h3>
 
+<form action="/album/<%=@album.slug%>/delete" method="post">
+  <input id="hidden" type="hidden" name="_method" value="delete">
+
 <% @album.songs.each do |song| %>
 <ul>
   <li>Song Name: <%= song.name %> <a href="/album/<%= @album.slug %>/<%= song.slug %>">View Song</a></li>
 </ul>
 <% end %>
+
+<h4><button type="submit" value="submit">Delete Album</button> </h4>
+
+</form>
 
 <p>Return to main <a href="/main">Main</a></p>
