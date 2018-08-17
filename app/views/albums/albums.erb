@@ -7,6 +7,7 @@
   <li>Album Name: <%= album.name %></li>
   <li>Year Released: <%= album.year_released %></li>
   <li>Band Name: <%= album.user.username.upcase %></li>
+  <li>View Songs</li>
   <% if album.user_id == @user.id %>
   <li>Edit Link</li>
   <% end %>
