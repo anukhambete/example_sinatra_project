@@ -1,6 +1,6 @@
 <h2>To Create a new Song, enter the song name, track length and album</h2>
 
-<form action="/album" method="POST">
+<form action="/song" method="POST">
   <label>Song Name:</label>
   <br></br>
   <input type="text" name="song_name" id="song_name">
@@ -11,16 +11,20 @@
   <br></br>
   <label>Create/Find Album:</label>
   <br></br>
-  <input type="text" name="name" id="name">
+  <input type="text" name="album[name]" id="name">
   <br></br>
   <label>Year of Release:</label>
   <br></br>
-  <input type="text" name="year_released" id="year_released">
+  <input type="text" name="album[year_released]" id="year_released">
   <br></br>
 
   <label>Choose an existing album:</label>
     <% Album.all.each do |album| %>
-    <input id="<%= album.name %>" type="checkbox" name="albums[]" value="<%= album.id %>">
+    <input id="<%= album.name %>" type="radio" name="albums[]" value="<%= album.id %>"><%=album.name%></input>
     <% end %>
   <button type="submit" value="submit">submit</button>
 </form>
+
+
+
+<p>To uncheck the radio button refresh the page</p>

@@ -1,0 +1,11 @@
+<h2><%= @album.name %></h2>
+
+<h3>List of Songs</h3>
+
+<% @album.songs.each do |song| %>
+<ul>
+  <li>Song Name: <%= song.name %></li>
+</ul>
+<% end %>
+
+<p>Return to main <a href="/main">Main</a></p>

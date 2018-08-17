@@ -87,6 +87,12 @@ class ApplicationController < Sinatra::Base
     end
   end
 
+  get '/album/:slug' do
+    #binding.pry
+    @album = Album.find_by_slug(params[:slug])
+    erb :'/albums/view_album'
+  end
+
   post '/album' do
   #binding.pry
   @user = User.find(session[:user_id])
@@ -105,6 +111,60 @@ class ApplicationController < Sinatra::Base
     redirect "/album/new"
   end
 end
+
+################################ song controller
+
+get '/song/new' do
+  if logged_in?
+    erb :'/songs/create_song'
+  else
+    redirect "/login"
+  end
+end
+
+post '/song' do
+  if logged_in?
+    #binding.pry
+    if !params[:song_name].blank? && !params[:track_length].blank?
+      if params.keys.include?("albums")
+          if !params[:albums].first.blank? && !params[:album][:name].blank?
+            redirect "/song/new"
+          elsif !params[:albums].first.blank?
+            @album = Album.find_by(params[:albums])
+            @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
+            @song.save
+            redirect "/albums"
+          else
+            redirect "/song/new"
+          end
+      elsif !params[:album][:name].blank? && !params[:album][:year_released].blank?
+        @user = User.find(session[:user_id])
+        @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+        @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
+        @album.save
+        @song.save
+        redirect "/albums"
+      else
+        redirect "/song/new"
+      end
+
+    else
+      redirect "/song/new"
+    end
+
+  else
+    redirect "/login"
+  end
+  #binding.pry
+end
+
+
+
+
+
+
+
+
 
   helpers do
     def logged_in?
