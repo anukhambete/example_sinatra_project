@@ -1,5 +1,8 @@
-<h2><%= @album.name %></h2>
-<h2>Edit Album name and Year of release</h2>
+<h2>Album name: <%= @album.name %></h2>
+<h2>Band name: <%= @album.user.username.upcase %></h2>
+<h2>Edit Album Name and Year of Release</h2>
+
+<p>Add/Create <a href="/song/new">New Song</a></p><br>
 
 <form action="/album/<%=@album.slug%>" method="POST">
   <label>Album Name:</label>
@@ -13,4 +16,11 @@
   <button type="submit" value="submit">submit</button>
 </form>
 
-<p>Add/Create <a href="/song/new">New Song</a></p>
+<h3><%= @album.name %> Song List</h3>
+<% @album.songs.each do |song| %>
+<ul>
+  <li>Song Name: <%= song.name %> <a href="/album/<%= @album.slug %>/<%= song.slug %>/edit">Edit Song</a></li>
+</ul>
+<% end %>
+
+<p>Return to <a href="/albums">List of albums</a></p>

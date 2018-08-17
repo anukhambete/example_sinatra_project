@@ -1,0 +1,30 @@
+<h2>Edit Song, enter the song name, track length and album</h2>
+
+<form action="/album/<%=@album.slug%>/<%=@song.slug%>" method="POST">
+  <label>Song Name:</label>
+  <br></br>
+  <input type="text" name="song_name" id="song_name" value="<%=@song.name%>">
+  <br></br>
+  <label>Track length:</label>
+  <br></br>
+  <input type="text" name="track_length" id="track_length" value="<%=@song.track_length%>">
+  <br></br>
+  <label>Create/Find Album:</label>
+  <br></br>
+  <input type="text" name="album[name]" id="name" value="<%=@album.name%>">
+  <br></br>
+  <label>Year of Release:</label>
+  <br></br>
+  <input type="text" name="album[year_released]" id="year_released" value="<%=@album.year_released%>">
+  <br></br>
+
+  <label>Choose an existing album:</label>
+    <% Album.all.each do |album| %>
+    <input id="<%= album.name %>" type="radio" name="albums[]" value="<%= album.id %>"><%=album.name%></input>
+    <% end %>
+  <button type="submit" value="submit">submit</button>
+</form>
+
+<p>Return to <a href="/albums">List of albums</a></p>
+
+<p>To uncheck the radio button refresh the page</p>

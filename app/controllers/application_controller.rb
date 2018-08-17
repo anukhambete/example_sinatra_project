@@ -174,7 +174,7 @@ post '/song' do
             redirect "/song/new"
           end
       elsif !params[:album][:name].blank? && !params[:album][:year_released].blank?
-        @user = User.find(session[:user_id])
+        @user = User.find_by_id(session[:user_id])
         @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
         @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
         @album.save
@@ -199,6 +199,49 @@ get '/album/:slug/:slug_s' do
   @album = Album.find_by_slug(params[:slug])
   @song = Song.find_by_slug(params[:slug_s])
   erb :'/songs/show_song'
+end
+
+get '/album/:slug/:slug_s/edit' do
+  #binding.pry
+  @album = Album.find_by_slug(params[:slug])
+  @song = Song.find_by_slug(params[:slug_s])
+  erb :'/songs/edit_song'
+end
+
+post '/album/:slug/:slug_s' do
+  #binding.pry
+  @song = Song.find_by_slug(params[:slug_s])
+  @album = Album.find_by_slug(params[:slug])
+  #binding.pry
+  if logged_in? && @song.album.user.id == current_user.id
+    if params[:song_name].blank? || params[:track_length].blank?
+      redirect to "/album/#{@album.slug}/#{@song.slug}/edit"
+    end
+
+    if params.keys.include?("albums")
+        if !params[:albums].first.blank? && !params[:album][:name].blank?
+          redirect "/album/#{@album.slug}/#{@song.slug}/edit"
+        elsif !params[:albums].first.blank?
+          @album_correct = Album.find_by_id(params[:albums])
+          @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
+          @song.save
+          redirect "/albums"
+        end
+    elsif !params[:album][:name].blank? && !params[:album][:year_released].blank?
+        @user = User.find_by_id(session[:user_id])
+        @album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+        @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
+        @album_correct.save
+        @song.save
+        redirect "/albums"
+    else
+        redirect "/album/#{@album.slug}/#{@song.slug}/edit"
+    end
+
+  else
+    redirect "/albums"
+  end
+
 end
 
 delete '/album/:slug/:slug_s/delete' do
