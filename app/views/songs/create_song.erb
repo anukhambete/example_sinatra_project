@@ -17,5 +17,10 @@
   <br></br>
   <input type="text" name="year_released" id="year_released">
   <br></br>
+
+  <label>Choose an existing album:</label>
+    <% Album.all.each do |album| %>
+    <input id="<%= album.name %>" type="checkbox" name="albums[]" value="<%= album.id %>">
+    <% end %>
   <button type="submit" value="submit">submit</button>
 </form>
