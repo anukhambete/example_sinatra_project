@@ -1,6 +1,6 @@
-class User < ActiveRecord::Base
-  has_secure_password
-  has_many :albums
+class Album < ActiveRecord::Base
+  belongs_to :user
+  #has_many :songs
 
   def slug
     a = self.username.downcase
