@@ -1,11 +1,15 @@
 <h1>Welcome, <%= @user.username %></h1>
 
 <h3>Albums</h3>
+
 <% @albums.each do |album| %>
-  <h3>Album Name: <%= album.name %> </h3>
-  <h3>Band Name: <%= album.user.username %> </h3>
-  <h3>Year Released: <%= album.year_released %> </h3>
+<ul>
+  <li>Album Name: <%= album.name %></li>
+  <li>Year Released: <%= album.year_released %></li>
+  <li>Band Name: <%= album.user.username.upcase %></li>
+</ul>
 <% end %>
+
 
 
 <p>Return to main <a href="/main">Main</a></p>
