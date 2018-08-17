@@ -16,7 +16,14 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/main' do
-    erb :'/main'
+    if logged_in?
+      @albums = Album.all
+      @user = User.find(session[:user_id])
+        erb :'/main'
+    else
+      redirect to "/login"
+    end
+
   end
 
   get '/signup' do
@@ -152,6 +159,7 @@ end
 
 get '/song/new' do
   if logged_in?
+    @user = User.find(session[:user_id])
     erb :'/songs/create_song'
   else
     redirect "/login"

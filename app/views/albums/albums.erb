@@ -3,15 +3,17 @@
 <h3>Albums</h3>
 
 <% @albums.each do |album| %>
-<ul>
-  <li>Album Name: <%= album.name %></li>
-  <li>Year Released: <%= album.year_released %></li>
-  <li>Band Name: <%= album.user.username.upcase %></li>
-  <li><a href="/album/<%= album.slug %>">View Songs</a></li>
-  <% if album.user_id == @user.id %>
-  <li><a href="/album/<%= album.slug %>/edit">Edit Album/Songs</a></li>
-  <% end %>
-</ul>
+
+  <ul>
+    <li>Album Name: <%= album.name %></li>
+    <li>Year Released: <%= album.year_released %></li>
+    <li>Band Name: <%= album.user.username.upcase %></li>
+    <li><a href="/album/<%= album.slug %>">View Songs</a></li>
+    <% if album.user_id == @user.id %>
+    <li><a href="/album/<%= album.slug %>/edit">Edit Album/Songs</a></li>
+    <% end %>
+  </ul>
+
 <% end %>
 
 
