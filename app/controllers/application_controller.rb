@@ -86,7 +86,7 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  get '/album/new' do
+  get '/album/new' do  #create album form
     if logged_in?
       erb :'/albums/create_album'
     else
@@ -94,13 +94,13 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  get '/album/:slug' do
+  get '/album/:slug' do  #view album
     #binding.pry
     @album = Album.find_by_slug(params[:slug])
     erb :'/albums/view_album'
   end
 
-  post '/album' do
+  post '/album' do #create album action
   #binding.pry
   @user = User.find(session[:user_id])
   if !params[:name].blank? && !params[:year_released].blank?
@@ -119,7 +119,7 @@ class ApplicationController < Sinatra::Base
   end
 end
 
-get '/album/:slug/edit' do
+get '/album/:slug/edit' do  #edit album form
   @album = Album.find_by_slug(params[:slug])
   if logged_in? && @album.user.id == current_user.id
     erb :'/albums/edit_album'
@@ -128,7 +128,7 @@ get '/album/:slug/edit' do
   end
 end
 
-post '/album/:slug' do
+post '/album/:slug' do #edit album action
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
   if logged_in? && @album.user.id == current_user.id
@@ -157,7 +157,7 @@ end
 
 ################################ song controller
 
-get '/song/new' do
+get '/song/new' do #form to create new song
   if logged_in?
     @user = User.find(session[:user_id])
     erb :'/songs/create_song'
@@ -166,7 +166,7 @@ get '/song/new' do
   end
 end
 
-post '/song' do
+post '/song' do #create song action
   if logged_in?
     #binding.pry
     if !params[:song_name].blank? && !params[:track_length].blank?
@@ -206,14 +206,14 @@ end
 
 ########
 
-get '/song/:slug/:slug_s' do
+get '/song/:slug/:slug_s' do #view song
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
   @song = Song.find_by_slug(params[:slug_s])
   erb :'/songs/show_song'
 end
 
-get '/song/:slug/:slug_s/edit' do
+get '/song/:slug/:slug_s/edit' do  #edit song form
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
   @song = Song.find_by_slug(params[:slug_s])
@@ -221,7 +221,7 @@ get '/song/:slug/:slug_s/edit' do
   erb :'/songs/edit_song'
 end
 
-post '/song/:slug/:slug_s' do
+post '/song/:slug/:slug_s' do #edit song action
   #binding.pry
   @song = Song.find_by_slug(params[:slug_s])
   @album = Album.find_by_slug(params[:slug])

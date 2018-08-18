@@ -11,17 +11,17 @@
   <br></br>
   <label>Create Album:</label>
   <br></br>
-  <input type="text" name="album[name]" id="name" value="<%=@album.name%>">
+  <input type="text" name="album[name]" id="name">
   <br></br>
   <label>Year of Release:</label>
   <br></br>
-  <input type="text" name="album[year_released]" id="year_released" value="<%=@album.year_released%>">
+  <input type="text" name="album[year_released]" id="year_released">
   <br></br>
 
   <label>Choose an existing album:</label>
     <% Album.all.each do |album| %>
     <% if album.user_id == @user.id%>
-    <input id="<%= album.name %>" type="radio" name="albums[]" value="<%= album.id %>"><%=album.name%></input>
+    <input id="<%= album.name %>" type="radio" name="albums[]" value="<%= album.id %>" <%='checked' if album.songs.include?(@song) %>><%=album.name%></input>
     <% end %>
     <% end %>
   <button type="submit" value="submit">submit</button>
