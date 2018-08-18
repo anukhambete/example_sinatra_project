@@ -78,7 +78,7 @@ class ApplicationController < Sinatra::Base
   get '/albums' do
     #binding.pry
     if logged_in?
-      @albums = Album.all
+      @albums = Album.all.order(user_id: :desc).order(year_released: :asc)
       @user = User.find(session[:user_id])
         erb :'/albums/albums'
     else
