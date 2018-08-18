@@ -175,9 +175,13 @@ post '/song' do
             redirect "/song/new"
           elsif !params[:albums].first.blank?
             @album = Album.find_by_id(params[:albums])
-            @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
-            @song.save
-            redirect "/albums"
+            if @album.user_id == current_user.id
+              @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
+              @song.save
+              redirect "/albums"
+            else
+              redirect "/song/new"
+            end
           else
             redirect "/song/new"
           end
@@ -202,28 +206,29 @@ end
 
 ########
 
-get '/album/:slug/:slug_s' do
+get '/song/:slug/:slug_s' do
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
   @song = Song.find_by_slug(params[:slug_s])
   erb :'/songs/show_song'
 end
 
-get '/album/:slug/:slug_s/edit' do
+get '/song/:slug/:slug_s/edit' do
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
   @song = Song.find_by_slug(params[:slug_s])
+  @user = User.find_by_id(session[:user_id])
   erb :'/songs/edit_song'
 end
 
-post '/album/:slug/:slug_s' do
+post '/song/:slug/:slug_s' do
   #binding.pry
   @song = Song.find_by_slug(params[:slug_s])
   @album = Album.find_by_slug(params[:slug])
   #binding.pry
   if logged_in? && @song.album.user.id == current_user.id
     if params[:song_name].blank? || params[:track_length].blank?
-      redirect to "/album/#{@album.slug}/#{@song.slug}/edit"
+      redirect to "/song/#{@album.slug}/#{@song.slug}/edit"
     end
 
     if params.keys.include?("albums")
@@ -236,14 +241,15 @@ post '/album/:slug/:slug_s' do
           redirect "/albums"
         end
     elsif !params[:album][:name].blank? && !params[:album][:year_released].blank?
+      #binding.pry
         @user = User.find_by_id(session[:user_id])
         @album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
-        @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
+        @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
         @album_correct.save
         @song.save
         redirect "/albums"
     else
-        redirect "/album/#{@album.slug}/#{@song.slug}/edit"
+        redirect "/song/#{@album.slug}/#{@song.slug}/edit"
     end
 
   else
@@ -252,7 +258,7 @@ post '/album/:slug/:slug_s' do
 
 end
 
-delete '/album/:slug/:slug_s/delete' do
+delete '/song/:slug/:slug_s/delete' do
   #binding.pry
   @song = Song.find_by_slug(params[:slug_s])
   if logged_in? && @song.album.user.id == current_user.id

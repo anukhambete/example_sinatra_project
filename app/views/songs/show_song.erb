@@ -2,7 +2,7 @@
 
 
 
-<form action="/album/<%=@album.slug%>/<%=@song.slug%>/delete" method="post">
+<form action="/song/<%=@album.slug%>/<%=@song.slug%>/delete" method="post">
   <input id="hidden" type="hidden" name="_method" value="delete">
 
   <h2>Song Name: <%= @song.name %></h2>

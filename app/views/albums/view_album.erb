@@ -7,7 +7,7 @@
 
 <% @album.songs.each do |song| %>
 <ul>
-  <li>Song Name: <%= song.name %> <a href="/album/<%= @album.slug %>/<%= song.slug %>">View Song</a></li>
+  <li>Song Name: <%= song.name %> <a href="/song/<%= @album.slug %>/<%= song.slug %>">View Song</a></li>
 </ul>
 <% end %>
 

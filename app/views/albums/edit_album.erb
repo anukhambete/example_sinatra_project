@@ -19,7 +19,7 @@
 <h3><%= @album.name %> Song List</h3>
 <% @album.songs.each do |song| %>
 <ul>
-  <li>Song Name: <%= song.name %> <a href="/album/<%= @album.slug %>/<%= song.slug %>/edit">Edit Song</a></li>
+  <li>Song Name: <%= song.name %> <a href="/song/<%= @album.slug %>/<%= song.slug %>/edit">Edit Song</a></li>
 </ul>
 <% end %>
 
