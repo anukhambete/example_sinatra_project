@@ -103,6 +103,17 @@ class ApplicationController < Sinatra::Base
   post '/album' do #create album action
   #binding.pry
   @user = User.find(session[:user_id])
+  @input_name = params[:name].gsub(" ","").downcase
+  @input_year = params[:year_released].gsub(" ","")
+
+  Album.all.each do |album|
+    if album.name.gsub(" ","").downcase == @input_name
+      if @input_year.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_year
+        redirect "/albums"   #include flash message
+      end
+    end
+  end
+
   if !params[:name].blank? && !params[:year_released].blank?
     @album = Album.find_or_create_by(name: params[:name], year_released: params[:year_released])
     if @user.albums.include?(@album)
@@ -166,9 +177,25 @@ get '/song/new' do #form to create new song
   end
 end
 
-post '/song' do #create song action
+post '/song' do                        #create song action
   if logged_in?
     #binding.pry
+
+    @input_name = params[:song_name].gsub(" ","").downcase
+    @input_time = params[:track_length].gsub(" ","")
+
+
+      if params.keys.include?("albums")
+        @album = Album.find_by_id(params[:albums])
+        @album.songs.each do |song|
+          if song.name.gsub(" ","").downcase == @input_name && song.track_length.gsub(" ","") == @input_time
+            redirect "/song/new" #add flash message  song already exists in album
+          end
+        end
+      end
+
+
+
     if !params[:song_name].blank? && !params[:track_length].blank?
       if params.keys.include?("albums")
           if !params[:albums].first.blank? && !params[:album][:name].blank?
@@ -186,9 +213,39 @@ post '/song' do #create song action
             redirect "/song/new"
           end
       elsif !params[:album][:name].blank? && !params[:album][:year_released].blank?
+        #binding.pry
         @user = User.find_by_id(session[:user_id])
-        @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
-        @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
+
+        @input_aname = params[:album][:name].gsub(" ","").downcase
+        @input_ayear = params[:album][:year_released].gsub(" ","")
+
+        @user.albums.each do |album|
+          
+          if album.name.gsub(" ","").downcase == @input_aname
+            if @input_ayear.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_ayear
+              @album = album
+            else
+              @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+            end
+          end
+
+        end
+
+        @album.songs.each do |song|
+          #binding.pry
+          if song.name.gsub(" ","").downcase == @input_name
+            if song.track_length.gsub(" ","") == @input_time
+              @song = song
+            else
+              @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
+            end
+          end
+
+        end
+
+
+
+
         @album.save
         @song.save
         redirect "/albums"
