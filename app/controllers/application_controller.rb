@@ -101,15 +101,15 @@ class ApplicationController < Sinatra::Base
   end
 
   post '/album' do #create album action
-  #binding.pry
+
   @user = User.find(session[:user_id])
   @input_name = params[:name].gsub(" ","").downcase
   @input_year = params[:year_released].gsub(" ","")
-
-  Album.all.each do |album|
+  #binding.pry
+  @user.albums.each do |album|
     if album.name.gsub(" ","").downcase == @input_name
       if @input_year.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_year
-        redirect "/albums"   #include flash message
+        redirect "/albums"   #include flash message saying the album already exists
       end
     end
   end
@@ -117,7 +117,7 @@ class ApplicationController < Sinatra::Base
   if !params[:name].blank? && !params[:year_released].blank?
     @album = Album.find_or_create_by(name: params[:name], year_released: params[:year_released])
     if @user.albums.include?(@album)
-      redirect "/albums"
+      redirect "/albums"  #include flash message saying the album already exists
     else
       @user.albums << @album
       @user.save
