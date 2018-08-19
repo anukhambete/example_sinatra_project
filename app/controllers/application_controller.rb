@@ -220,30 +220,28 @@ post '/song' do                        #create song action
         @input_ayear = params[:album][:year_released].gsub(" ","")
 
         @user.albums.each do |album|
-          
           if album.name.gsub(" ","").downcase == @input_aname
             if @input_ayear.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_ayear
               @album = album
-            else
-              @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
             end
           end
-
         end
 
+          if @album == nil
+            @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+          end
+
         @album.songs.each do |song|
-          #binding.pry
           if song.name.gsub(" ","").downcase == @input_name
             if song.track_length.gsub(" ","") == @input_time
               @song = song
-            else
-              @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
             end
           end
-
         end
 
-
+          if @song == nil
+            @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
+          end
 
 
         @album.save
