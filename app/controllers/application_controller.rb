@@ -324,6 +324,7 @@ post '/song/:slug/:slug_s' do #edit song action
   #binding.pry
   if logged_in? && @song.album.user.id == current_user.id
     if params[:song_name].blank? || params[:track_length].blank?
+      flash[:message] = "Enter a song name and track length"
       redirect to "/song/#{@album.slug}/#{@song.slug}/edit"
     end
 
@@ -350,6 +351,7 @@ post '/song/:slug/:slug_s' do #edit song action
           @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
           @album_correct.save
           @song.save
+          flash[:message] = "Successfully updated song."
           redirect "/albums"   #include flash message
     elsif params.keys.include?("albums")
             if !params[:albums].first.blank? && !params[:album][:name].blank?
@@ -358,6 +360,7 @@ post '/song/:slug/:slug_s' do #edit song action
               @album_correct = Album.find_by_id(params[:albums])
               @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
               @song.save
+              flash[:message] = "Successfully updated song."
               redirect "/albums"
             end
     else
@@ -365,6 +368,7 @@ post '/song/:slug/:slug_s' do #edit song action
     end
 
   else
+    flash[:message] = "You cannot edit that song."
     redirect "/albums"
   end
 

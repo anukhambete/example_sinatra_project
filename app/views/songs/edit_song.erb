@@ -1,3 +1,6 @@
+<% if flash.has?(:message) %>
+  <%= flash[:message] %>
+<% end %>
 <h2>Edit Song, enter the song name, track length and album</h2>
 
 <form action="/song/<%=@album.slug%>/<%=@song.slug%>" method="POST">
