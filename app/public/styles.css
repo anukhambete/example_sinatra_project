@@ -24,6 +24,18 @@ h2{
   text-align: right;
   }
 
+  #createlinks{
+    display: inline-block;
+    font-weight: bold;
+    width: 40%;
+    margin: 0;
+    text-transform: uppercase;
+    color: black;
+    text-align: left;
+    text-decoration: none;
+    font: 15px "Times New Roman", serif;
+  }
+
   #toptext{
     position: fixed;
     top: 0px;

@@ -1,8 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Music Library</title>
+<link rel="stylesheet" href="/styles.css"/>
+</head>
+
+<body>
 <% if flash.has?(:message) %>
 <%= flash[:message] %>
 <% end %>
 
 <h1>Welcome, <%= @user.username.upcase %></h1>
+
+<div id="createlinks">
+<a href="/album/new">CREATE NEW ALBUM</a>  <a href="/song/new">CREATE NEW SONG</a>
+</div>
 
 <h3>Albums</h3>
 
@@ -20,8 +33,11 @@
 
 <% end %>
 
+<div id="links">
+  <a href="/main">Return to Main</a> <a href="/logout">Log Out</a>
+</div>
 
 
-<p>Return to main <a href="/main">Main</a></p>
 
-<p>Create <a href="/album/new">New Album</a> Create <a href="/song/new">New Song</a></p>
+</body>
+</html>
