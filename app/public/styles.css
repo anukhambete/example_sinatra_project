@@ -7,6 +7,9 @@ h1{
   color: rgb(111,127,122);
   background: #F3EBE9;
   text-align: center;
+  border-bottom: 2px solid #ccc;
+  margin-top: 20px;
+  margin-bottom: 1px;
 }
 
 h2{
@@ -25,13 +28,21 @@ h2{
   }
 
   #createlinks{
-    display: inline-block;
+    background: white;
     font-weight: bold;
-    width: 40%;
+  }
+
+  #createlinks a{
+    display: inline-block;
+    background: white;
+    width: 20%;
     margin: 0;
+    padding: 15px 0;
     text-transform: uppercase;
     color: black;
-    text-align: left;
+    font-weight: bold;
+    text-align: center;
+    border-right: 0px solid #ccc;
     text-decoration: none;
     font: 15px "Times New Roman", serif;
   }
@@ -40,4 +51,51 @@ h2{
     position: fixed;
     top: 0px;
     width: 100%;
+  }
+
+  #albumlist {
+    background: #A9A9A9;
+  }
+
+  #listheading {
+    background: #A9A9A9;
+
+    color: black;
+    font-weight: bold;
+    text-align: left;
+    padding: 2px 0px 0px 50px;
+    border-bottom: 2px solid #ccc;
+  }
+
+  #albumdetails p{
+    width: 20%;
+    display: inline-block;
+    text-align: left;
+    padding: 5px;
+    margin-left: 10px;
+    font: 15px "Times New Roman", serif;
+  }
+
+  #albumlinks p {
+    width: 20%;
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px;
+    text-align: left;
+
+  }
+
+  #albumlinks p a {
+
+    display: inline-block;
+
+    text-align: left;
+    text-transform: uppercase;
+    color: white;
+    font-weight: 900;
+
+    border-right: 0px solid #ccc;
+    text-decoration: none;
+    font: 12px "Times New Roman", serif;
+
   }

@@ -17,21 +17,31 @@
 <a href="/album/new">CREATE NEW ALBUM</a>  <a href="/song/new">CREATE NEW SONG</a>
 </div>
 
+<div id="albumlist">
+
+<div id="listheading">
 <h3>Albums</h3>
+</div>
 
 <% @albums.each do |album| %>
 
-  <ul>
-    <li>Album Name: <%= album.name %></li>
-    <li>Year Released: <%= album.year_released %></li>
-    <li>Band Name: <%= album.user.username.upcase %></li>
-    <li><a href="/album/<%= album.slug %>">View Songs</a></li>
-    <% if album.user_id == @user.id %>
-    <li><a href="/album/<%= album.slug %>/edit">Edit Album/Songs</a></li>
-    <% end %>
-  </ul>
+<div id="albumdetails">
 
+      <p>Album Name: <%= album.name %></p>
+      <p>Year Released: <%= album.year_released %></p>
+      <p>Band Name: <%= album.user.username.upcase %></p>
+    
+</div>
+
+<div id="albumlinks">
+    <p><a href="/album/<%= album.slug %>">View Songs</a></p>
+    <% if album.user_id == @user.id %>
+    <p><a href="/album/<%= album.slug %>/edit">Edit Album/Songs</a></p>
+    <% end %>
 <% end %>
+</div>
+
+</div>
 
 <div id="links">
   <a href="/main">Return to Main</a> <a href="/logout">Log Out</a>
