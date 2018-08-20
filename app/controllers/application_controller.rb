@@ -286,23 +286,39 @@ post '/song/:slug/:slug_s' do #edit song action
       redirect to "/song/#{@album.slug}/#{@song.slug}/edit"
     end
 
-    if params.keys.include?("albums")
-        if !params[:albums].first.blank? && !params[:album][:name].blank?
-          redirect "/album/#{@album.slug}/#{@song.slug}/edit"
-        elsif !params[:albums].first.blank?
-          @album_correct = Album.find_by_id(params[:albums])
-          @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
-          @song.save
-          redirect "/albums"
-        end
-    elsif !params[:album][:name].blank? && !params[:album][:year_released].blank?
+
+    if !params[:album][:name].blank? && !params[:album][:year_released].blank?
       #binding.pry
         @user = User.find_by_id(session[:user_id])
-        @album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
-        @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
-        @album_correct.save
-        @song.save
-        redirect "/albums"
+        @input_aname = params[:album][:name].gsub(" ","").downcase
+        @input_ayear = params[:album][:year_released].gsub(" ","")
+
+        @user.albums.each do |album|
+          if album.name.gsub(" ","").downcase == @input_aname
+            if @input_ayear.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_ayear
+              @album_correct = album
+            end
+          end
+        end
+
+          if @album_correct == nil
+            @album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+          end
+        #@album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+          #binding.pry
+          @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
+          @album_correct.save
+          @song.save
+          redirect "/albums"   #include flash message
+    elsif params.keys.include?("albums")
+            if !params[:albums].first.blank? && !params[:album][:name].blank?
+              redirect "/album/#{@album.slug}/#{@song.slug}/edit"
+            elsif !params[:albums].first.blank?
+              @album_correct = Album.find_by_id(params[:albums])
+              @song.update(name: params[:song_name], track_length: params[:track_length], album_id: @album_correct.id)
+              @song.save
+              redirect "/albums"
+            end
     else
         redirect "/song/#{@album.slug}/#{@song.slug}/edit"
     end

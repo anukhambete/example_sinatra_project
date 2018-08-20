@@ -2,21 +2,14 @@
 
 <form action="/song/<%=@album.slug%>/<%=@song.slug%>" method="POST">
   <label>Song Name:</label>
-  <br></br>
+
   <input type="text" name="song_name" id="song_name" value="<%=@song.name%>">
   <br></br>
   <label>Track length:</label>
-  <br></br>
+
   <input type="text" name="track_length" id="track_length" value="<%=@song.track_length%>">
   <br></br>
-  <label>Create Album:</label>
-  <br></br>
-  <input type="text" name="album[name]" id="name">
-  <br></br>
-  <label>Year of Release:</label>
-  <br></br>
-  <input type="text" name="album[year_released]" id="year_released">
-  <br></br>
+
 
   <label>Choose an existing album:</label>
     <% Album.all.each do |album| %>
@@ -24,6 +17,19 @@
     <input id="<%= album.name %>" type="radio" name="albums[]" value="<%= album.id %>" <%='checked' if album.songs.include?(@song) %>><%=album.name%></input>
     <% end %>
     <% end %>
+  <br></br>
+
+  <h4>Create album if it's not included in the existing albums</h4>
+  <label>Create Album:</label>
+
+  <input type="text" name="album[name]" id="name">
+  <br></br>
+  <label>Year of Release:</label>
+
+  <input type="text" name="album[year_released]" id="year_released">
+  <br></br>
+
+
   <button type="submit" value="submit">submit</button>
 </form>
 
