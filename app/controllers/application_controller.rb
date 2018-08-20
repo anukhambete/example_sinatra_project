@@ -7,8 +7,11 @@ class ApplicationController < Sinatra::Base
   set :session_secret, "password_security"
 
   configure do
-      set :public_folder, 'public'
+      set :public_folder, 'app/public'
       set :views, 'app/views'
+      #set :public_folder, File.expand_path('../public', __FILE__)
+      #set :views        , File.expand_path('/views', __FILE__)
+      #set :root         , File.dirname(__FILE__)
     end
 
   get '/' do

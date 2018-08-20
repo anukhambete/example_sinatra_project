@@ -1,5 +1,17 @@
-<h1>Hello <%=@user.username.upcase%>!</h1>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Music Library</title>
+    <link rel="stylesheet" href="/styles.css"/>
+  </head>
 
-<h2>View a list of albums <a href="/albums">Albums</a></h2>
+  <body>
+    <h1>Welcome <%=@user.username.upcase%>!</h1>
 
-<h4><a href="/logout">Log Out</a> </h4>
+    <h2>View a list of albums <a href="/albums">Albums</a></h2>
+
+    <h4><a href="/logout">Log Out</a> </h4>
+
+</body>
+</html>
