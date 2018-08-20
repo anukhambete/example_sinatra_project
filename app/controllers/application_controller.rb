@@ -30,12 +30,19 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/signup' do
-    erb :'/users/create_user'
+    if logged_in?
+      @albums = Album.all
+      @user = User.find(session[:user_id])
+        erb :'/main'
+    else
+      erb :'/users/create_user'
+    end
   end
 
 
   post '/signup' do
     #binding.pry
+    #if logged in - flash message : you must log out first to sign up as a diff user
     if !params[:username].blank? && !params[:password].blank? && !params[:email].blank?
       @user = User.new(username: params[:username], password: params[:password], email: params[:email])
       @user.save
@@ -60,7 +67,7 @@ class ApplicationController < Sinatra::Base
     @user = User.find_by(:username => params[:username])
 		if @user && @user.authenticate(params[:password])
       session[:user_id] = @user.id
-      redirect "/albums"
+      redirect "/main"
     else
       redirect "/login"
     end
