@@ -1,8 +1,10 @@
 require './config/environment'
 require 'pry'
+require 'rack-flash'
 
 class ApplicationController < Sinatra::Base
   register Sinatra::ActiveRecordExtension
+  use Rack::Flash
   enable :sessions
   set :session_secret, "password_security"
 
@@ -43,13 +45,18 @@ class ApplicationController < Sinatra::Base
   post '/signup' do
     #binding.pry
     #if logged in - flash message : you must log out first to sign up as a diff user
-    if !params[:username].blank? && !params[:password].blank? && !params[:email].blank?
+    if logged_in?
+      flash[:message] = "You must log out first to sign up as a different user."
+      redirect to "/main"
+    elsif !params[:username].blank? && !params[:password].blank? && !params[:email].blank?
       @user = User.new(username: params[:username], password: params[:password], email: params[:email])
       @user.save
       session[:user_id] = @user.id
+      flash[:message] = "Sign Up successful!"
       redirect to "/main"
     else
       #"Enter a valid username, password and email address"
+      flash[:message] = "Enter a valid username, password and email address. Do not leave any fields blank."
       redirect to "/signup"
     end
   end
@@ -119,6 +126,7 @@ class ApplicationController < Sinatra::Base
   @user.albums.each do |album|
     if album.name.gsub(" ","").downcase == @input_name
       if @input_year.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_year
+        flash[:message] = "The album already exists."
         redirect "/albums"   #include flash message saying the album already exists
       end
     end
@@ -127,15 +135,20 @@ class ApplicationController < Sinatra::Base
   if !params[:name].blank? && !params[:year_released].blank?
     @album = Album.find_or_create_by(name: params[:name], year_released: params[:year_released])
     if @user.albums.include?(@album)
+      flash[:message] = "The album already exists."
       redirect "/albums"  #include flash message saying the album already exists
     else
       @user.albums << @album
       @user.save
       @album.save
+      flash[:message] = "Successfully created album."
+      redirect "/albums"
     end
     #binding.pry
+    flash[:message] = "Successfully created album."
     redirect "/albums"
   else
+    flash[:message] = "Please enter a valid name and year of release."
     redirect "/album/new"
   end
 end
@@ -153,10 +166,17 @@ post '/album/:slug' do #edit album action
   #binding.pry
   @album = Album.find_by_slug(params[:slug])
   if logged_in? && @album.user.id == current_user.id
-    @album.update(name: params[:name]) unless params[:name].blank?
-    @album.update(year_released: params[:year_released]) unless params[:year_released].blank?
-    redirect to "/albums"
+    if params[:name].blank? || params[:year_released].blank?
+      flash[:message] = "Enter a valid name and year of release."
+      redirect to "/albums"
+    else
+      @album.update(name: params[:name]) unless params[:name].blank?
+      @album.update(year_released: params[:year_released]) unless params[:year_released].blank?
+      flash[:message] = "Successfully updated album."
+      redirect to "/albums"
+    end
   else
+    flash[:message] = "You cannot edit the album."
     redirect to "/albums"
   end
 end
@@ -170,9 +190,11 @@ delete '/album/:slug/delete' do
     end
 
     @album.delete
-    redirect to "/main"
+    flash[:message] = "Successfully deleted album."
+    redirect to "/albums"
   else
-    redirect to "/main"
+    flash[:message] = "You cannot delete that album."
+    redirect to "/albums"
   end
 end
 
@@ -198,8 +220,10 @@ post '/song' do                        #create song action
       if params.keys.include?("albums")
         @album = Album.find_by_id(params[:albums])
         @album.songs.each do |song|
+          #binding.pry
           if song.name.gsub(" ","").downcase == @input_name && song.track_length.gsub(" ","") == @input_time
-            redirect "/song/new" #add flash message  song already exists in album
+            flash[:message] = "This song already exists as part of this album."
+            redirect to "/album/#{song.album.slug}/edit" #add flash message  song already exists in album
           end
         end
       end
@@ -209,14 +233,18 @@ post '/song' do                        #create song action
     if !params[:song_name].blank? && !params[:track_length].blank?
       if params.keys.include?("albums")
           if !params[:albums].first.blank? && !params[:album][:name].blank?
+            flash[:message] = "Please create or choose an existing album."
             redirect "/song/new"
           elsif !params[:albums].first.blank?
             @album = Album.find_by_id(params[:albums])
             if @album.user_id == current_user.id
               @song = Song.find_or_create_by(name: params[:song_name], track_length: params[:track_length], album_id: @album.id)
               @song.save
-              redirect "/albums"
+              flash[:message] = "Song was successfully created."
+              #redirect "/albums"
+              redirect to "/album/#{@song.album.slug}/edit"
             else
+              flash[:message] = "Please create or choose an existing album."
               redirect "/song/new"
             end
           else
@@ -256,12 +284,15 @@ post '/song' do                        #create song action
 
         @album.save
         @song.save
-        redirect "/albums"
+        flash[:message] = "Song was successfully created."
+        redirect to "/album/#{@song.album.slug}/edit"
       else
+        flash[:message] = "Please create or choose an existing album."
         redirect "/song/new"
       end
 
     else
+      flash[:message] = "Please enter a song name and track length."
       redirect "/song/new"
     end
   else
@@ -344,9 +375,11 @@ delete '/song/:slug/:slug_s/delete' do
   @song = Song.find_by_slug(params[:slug_s])
   if logged_in? && @song.album.user.id == current_user.id
     @song.delete
-    redirect to "/main"
+    flash[:message] = "Successfully deleted song."
+    redirect to "/albums"
   else
-    redirect to "/main"
+    flash[:message] = "You cannot delete that song."
+    redirect to "/albums"
   end
 end
 

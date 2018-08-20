@@ -1,3 +1,7 @@
+<% if flash.has?(:message) %>
+<%= flash[:message] %>
+<% end %>
+
 <h1>Welcome, <%= @user.username.upcase %></h1>
 
 <h3>Albums</h3>
