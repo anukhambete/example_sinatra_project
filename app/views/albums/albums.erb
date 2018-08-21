@@ -30,13 +30,13 @@
       <p>Album Name: <%= album.name %></p>
       <p>Year Released: <%= album.year_released %></p>
       <p>Band Name: <%= album.user.username.upcase %></p>
-    
-</div>
 
-<div id="albumlinks">
-    <p><a href="/album/<%= album.slug %>">View Songs</a></p>
+<!--  </div> -->
+
+<!-- <div id="albumlinks"> -->
+    <p><a href="/album/<%= album.slug %>">View Songs/Delete Album</a></p>
     <% if album.user_id == @user.id %>
-    <p><a href="/album/<%= album.slug %>/edit">Edit Album/Songs</a></p>
+    <p><a href="/album/<%= album.slug %>/edit">Edit Album or Songs</a></p>
     <% end %>
 <% end %>
 </div>
