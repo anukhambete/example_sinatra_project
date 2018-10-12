@@ -144,7 +144,7 @@ class SongsController < ApplicationController
           end
 
             if @album_correct == nil
-              @album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+              @album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: @input_ayear, user_id: @user.id)
             end
           #@album_correct = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
             #binding.pry
