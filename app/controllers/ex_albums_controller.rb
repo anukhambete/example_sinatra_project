@@ -29,33 +29,36 @@ class AlbumsController < ApplicationController
   @user = User.find(session[:user_id])
   @input_name = params[:name].gsub(" ","").downcase
   @input_year = params[:year_released].gsub(" ","")
-  binding.pry
+
+  #binding.pry
 
 
-  if !params[:name].blank? && !params[:year_released].blank?
+  if !params[:name].blank? && !params[:year_released].blank? && @input_year.scan(/\D/).empty?
       @user.albums.each do |album|
+        @message = nil
         if album.name.gsub(" ","").downcase == @input_name
-          if !@input_year.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_year
-            flash[:message] = "The album already exists."
-            redirect "/albums"   #include flash message saying the album already exists
+          if @input_year.scan(/\D/).empty? && album.year_released.gsub(" ","") == @input_year
+            @message = "The album already exists."
+            #flash[:message] = "The album already exists."
+            #redirect "/albums"   #include flash message saying the album already exists
           end
         end
+        @message
       end
-    @album = Album.find_or_create_by(name: params[:name], year_released: params[:year_released])
-    if @user.albums.include?(@album)
-      flash[:message] = "The album already exists."
-      redirect "/albums"  #include flash message saying the album already exists
-    else
-      @album = Album.find_or_create_by(name: params[:name], year_released: params[:year_released])
-      @user.albums << @album
-      @user.save
-      @album.save
-      flash[:message] = "Successfully created album."
-      redirect "/albums"
-    end
+
+      if @message != nil
+        flash[:message] = "The album already exists."
+        redirect "/albums"   #include flash message saying the album already exists
+      else
+        @album = Album.find_or_create_by(name: params[:name], year_released: @input_year)
+        @user.albums << @album
+        @user.save
+        @album.save
+        flash[:message] = "Successfully created album."
+        redirect "/albums"
+      end
     #binding.pry
-    flash[:message] = "Successfully created album."
-    redirect "/albums"
+
   elsif !params[:name].blank? && params[:year_released].blank?
     @user.albums.each do |album|
       if album.name.gsub(" ","").downcase == @input_name
