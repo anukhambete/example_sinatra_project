@@ -62,10 +62,11 @@ class SongsController < ApplicationController
                 @album = album
               end
             end
+            @album
           end
 
             if @album == nil
-              @album = Album.find_or_create_by(name: params[:album][:name], year_released: params[:album][:year_released], user_id: @user.id)
+              @album = Album.find_or_create_by(name: params[:album][:name], year_released: @input_ayear, user_id: @user.id)
             end
 
           @album.songs.each do |song|
